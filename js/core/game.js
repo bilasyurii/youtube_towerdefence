@@ -1,6 +1,6 @@
-import Renderer from "./core/renderer.js";
-import Time from "./core/time.js";
-import World from "./core/world.js";
+import Renderer from "./renderer.js";
+import Time from "./time.js";
+import World from "./world.js";
 import ScreenManager from "./screen/screen-manager.js";
 
 export default class Game {

@@ -1,4 +1,4 @@
-import Vector from "../math/vector.js";
+import Vector from "./math/vector.js";
 
 export default class Entity {
   constructor(game) {
