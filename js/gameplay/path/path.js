@@ -16,4 +16,9 @@ export default class Path extends Entity {
     this._points.push(point);
     this.add(point);
   }
+
+  getNext(point) {
+    const points = this._points;
+    return points[points.indexOf(point) + 1];
+  }
 }

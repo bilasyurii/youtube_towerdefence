@@ -4,7 +4,6 @@ export default class Entity {
   constructor(game) {
     this.game = game;
     this.position = new Vector();
-    this.velocity = new Vector();
     this.parent = null;
     this.children = [];
   }

@@ -22,6 +22,31 @@ export default class Vector {
     return this;
   }
 
+  sub(vec) {
+    this.x -= vec.x;
+    this.y -= vec.y;
+    return this;
+  }
+
+  getLength() {
+    const x = this.x;
+    const y = this.y;
+    return Math.sqrt(x * x + y * y);
+  }
+
+  normalize() {
+    const lenInv = 1 / this.getLength();
+    this.x = this.x * lenInv;
+    this.y = this.y * lenInv;
+    return this;
+  }
+
+  copyFrom(vec) {
+    this.x = vec.x;
+    this.y = vec.y;
+    return this;
+  }
+
   clone() {
     return new Vector(this.x, this.y);
   }
