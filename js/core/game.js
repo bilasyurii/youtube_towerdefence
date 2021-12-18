@@ -2,6 +2,7 @@ import Renderer from "./renderer.js";
 import Time from "./time.js";
 import World from "./world.js";
 import ScreenManager from "./screen/screen-manager.js";
+import ObjectFactory from "./graphics/object-factory.js";
 
 export default class Game {
   constructor(canvas) {
@@ -10,8 +11,13 @@ export default class Game {
     this.time = null;
     this.world = null;
     this.renderer = null;
+    this.create = null;
 
     this._init();
+  }
+
+  add(entity) {
+    this.world.add(entity);
   }
 
   start() {
@@ -24,6 +30,7 @@ export default class Game {
     this._initTime();
     this._initWorld();
     this._initRenderer();
+    this._initObjectFactory();
   }
 
   _initScreenManager() {
@@ -40,6 +47,10 @@ export default class Game {
 
   _initRenderer() {
     this.renderer = new Renderer(this);
+  }
+
+  _initObjectFactory() {
+    this.create = new ObjectFactory(this);
   }
 
   _raf() {
