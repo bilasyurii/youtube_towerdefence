@@ -17,6 +17,9 @@ export default class Gameplay extends Entity {
   _init() {
     this._initPath();
     this._initEnemyBase();
+    this._setupEvents();
+
+    this._enemyBase.spawnEnemy();
   }
 
   _initPath() {
@@ -42,7 +45,14 @@ export default class Gameplay extends Entity {
     const base = new EnemyBase(this.game, this._path);
     this._enemyBase = base;
     this.add(base);
+  }
 
-    base.spawnEnemy();
+  _setupEvents() {
+    this._enemyBase.events.on('spawnEnemy', this._onEnemySpawned, this);
+  }
+
+  _onEnemySpawned(enemy) {
+    this._enemies.push(enemy);
+    this.add(enemy);
   }
 }

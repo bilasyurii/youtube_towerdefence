@@ -1,10 +1,13 @@
 import Entity from "../../core/entity.js";
 import Config from "../data/config.js";
 import Enemy from "./enemy.js";
+import EventEmitter from "../../core/events/event-emitter.js";
 
 export default class EnemyBase extends Entity {
   constructor(game, path) {
     super(game);
+
+    this.events = new EventEmitter();
 
     this._path = path;
     this._view = null;
@@ -14,7 +17,7 @@ export default class EnemyBase extends Entity {
 
   spawnEnemy() {
     const enemy = new Enemy(this.game, this._path);
-    console.log('enemy', enemy);
+    this.events.emit('spawnEnemy', enemy);
   }
 
   _init() {
