@@ -1,6 +1,6 @@
 import Entity from "../core/entity.js";
 import Vector from "../core/math/vector.js";
-import Enemy from "./enemy/enemy.js";
+import EnemyBase from "./enemy/enemy-base.js";
 import Path from "./path/path.js";
 
 export default class Gameplay extends Entity {
@@ -8,6 +8,7 @@ export default class Gameplay extends Entity {
     super(game);
 
     this._path = null;
+    this._enemyBase = null;
     this._enemies = [];
 
     this._init();
@@ -15,7 +16,7 @@ export default class Gameplay extends Entity {
 
   _init() {
     this._initPath();
-    this._initEnemies();
+    this._initEnemyBase();
   }
 
   _initPath() {
@@ -37,9 +38,11 @@ export default class Gameplay extends Entity {
     path.addPoint(new Vector(5, 5));
   }
 
-  _initEnemies() {
-    const enemy = new Enemy(this.game, this._path);
-    this._enemies.push(enemy);
-    this.add(enemy);
+  _initEnemyBase() {
+    const base = new EnemyBase(this.game, this._path);
+    this._enemyBase = base;
+    this.add(base);
+
+    base.spawnEnemy();
   }
 }

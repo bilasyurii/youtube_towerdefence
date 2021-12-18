@@ -21,7 +21,6 @@ export default class Game {
   }
 
   start() {
-    console.log('wroom');
     this._raf();
   }
 
