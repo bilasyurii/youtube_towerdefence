@@ -4,7 +4,11 @@ import Config from "./data/config.js";
 import EnemyBase from "./enemy/enemy-base.js";
 import Path from "./path/path.js";
 import Tile from "./tiles/tile.js";
+import Archer from "./towers/archer.js";
+import Bomber from "./towers/bomber.js";
+import Slower from "./towers/slower.js";
 import TowerSelector from "./towers/tower-selector.js";
+import Tower from "./towers/tower.js";
 
 export default class Gameplay extends Entity {
   constructor(game) {
@@ -15,8 +19,10 @@ export default class Gameplay extends Entity {
     this._selector = null;
     this._enemies = [];
     this._tiles = [];
+    this._towers = [];
     this._mapLayer = null;
     this._uiLayer = null;
+    this._tileSelected = null;
 
     this._init();
   }
@@ -126,21 +132,48 @@ export default class Gameplay extends Entity {
   }
 
   _onTowerSelected(towerType) {
-    console.log(towerType);
+    let tower;
+
+    switch (towerType) {
+      case Tower.Type.Archer:
+        tower = new Archer(this.game);
+        break;
+      case Tower.Type.Bomber:
+        tower = new Bomber(this.game);
+        break;
+      case Tower.Type.Slower:
+        tower = new Slower(this.game);
+        break;
+    }
+
+    this._towers.push(tower);
+    this._mapLayer.add(tower);
+
+    const tile = this._tileSelected;
+    tile.tower = tower;
+    tower.position.copyFrom(tile.getCenter());
+
+    this._tileSelected = null;
     this._selector.hide();
   }
 
   _onSelectorClose() {
     this._selector.hide();
+    this._tileSelected = null;
   }
 
   _onTileDown(tile) {
+    if (tile.tower) {
+      return;
+    }
+
     const selector = this._selector;
 
     if (selector.visible === true) {
       return;
     }
 
+    this._tileSelected = tile;
     selector.show();
     selector.position.copyFrom(tile.getCenter());
   }

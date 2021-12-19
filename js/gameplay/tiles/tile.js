@@ -7,6 +7,7 @@ export default class Tile extends Entity {
     super(game);
 
     this.events = new EventEmitter();
+    this.tower = null;
     this._view = null;
 
     this._init();
