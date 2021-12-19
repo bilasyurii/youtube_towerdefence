@@ -11,6 +11,11 @@ export default class PathPoint extends Entity {
     this._init();
   }
 
+  getCenter() {
+    const halfSize = Config.PathSize * 0.5;
+    return this.position.clone().addXY(halfSize, halfSize);
+  }
+
   _init() {
     this._initView();
   }

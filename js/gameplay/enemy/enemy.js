@@ -1,4 +1,5 @@
 import Entity from "../../core/entity.js";
+import Vector from "../../core/math/vector.js";
 import Config from "../data/config.js";
 
 export default class Enemy extends Entity {
@@ -21,7 +22,10 @@ export default class Enemy extends Entity {
     }
 
     const position = this.position;
-    const nextPosition = nextPoint.position;
+    const centerOffset = Config.EnemySize * 0.5;
+    position.addXY(centerOffset, centerOffset);
+
+    const nextPosition = nextPoint.getCenter();
     const direction = nextPosition
       .clone()
       .sub(position);
@@ -35,6 +39,8 @@ export default class Enemy extends Entity {
     } else {
       position.addXY(direction.x * movement, direction.y * movement);
     }
+
+    position.addXY(-centerOffset, -centerOffset);
   }
 
   _init() {
