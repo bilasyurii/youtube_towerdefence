@@ -23,6 +23,10 @@ export default class Renderer {
   }
 
   _renderEntity(entity, parentOffset) {
+    if (entity.visible === false) {
+      return;
+    }
+
     const offset = parentOffset.clone().add(entity.position);
     this.ctx.setTransform(1, 0, 0, 1, offset.x, offset.y);
     entity.render(this.ctx);

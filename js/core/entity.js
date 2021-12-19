@@ -5,12 +5,27 @@ import Vector from "./math/vector.js";
 export default class Entity {
   constructor(game) {
     this.game = game;
+    this.visible = true;
     this.position = new Vector();
     this.worldPosition = new Vector();
     this.parent = null;
     this.children = [];
     this.input = null;
     this._selfBounds = new Bounds();
+  }
+
+  get worldVisible() {
+    if (this.visible === false) {
+      return false;
+    }
+
+    const parent = this.parent;
+
+    if (parent) {
+      return parent.worldVisible;
+    }
+
+    return true;
   }
 
   add(child) {
@@ -71,6 +86,18 @@ export default class Entity {
         .copyFrom(parent.worldPosition)
         .add(this.position);
     }
+  }
+
+  alignAnchor(x = 0.5, y = x) {
+    const bounds = this.getBounds();
+    this.position.set(bounds.width * -x, bounds.height * -y);
+  }
+
+  getCenter() {
+    const bounds = this.getBounds();
+    return this.position
+      .clone()
+      .addXY(bounds.width * 0.5, bounds.height * 0.5);
   }
 
   addInput() {

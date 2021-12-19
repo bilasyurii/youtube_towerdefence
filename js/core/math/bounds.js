@@ -6,6 +6,14 @@ export default class Bounds {
     this.bottom = -Infinity;
   }
 
+  get width() {
+    return this.right - this.left;
+  }
+
+  get height() {
+    return this.bottom - this.top;
+  }
+
   set(left, right, top, bottom) {
     this.left = left;
     this.right = right;

@@ -4,6 +4,7 @@ import Config from "./data/config.js";
 import EnemyBase from "./enemy/enemy-base.js";
 import Path from "./path/path.js";
 import Tile from "./tiles/tile.js";
+import TowerSelector from "./towers/tower-selector.js";
 
 export default class Gameplay extends Entity {
   constructor(game) {
@@ -11,24 +12,41 @@ export default class Gameplay extends Entity {
 
     this._path = null;
     this._enemyBase = null;
+    this._selector = null;
     this._enemies = [];
+    this._tiles = [];
+    this._mapLayer = null;
+    this._uiLayer = null;
 
     this._init();
   }
 
   _init() {
+    this.position.addXY(100, 100);
+    this._initLayers();
     this._initPath();
     this._initEnemyBase();
     this._initTiles();
+    this._initSelector();
     this._setupEvents();
 
     this._enemyBase.spawnEnemy();
   }
 
+  _initLayers() {
+    const mapLayer = new Entity(this.game);
+    this._mapLayer = mapLayer;
+    this.add(mapLayer);
+
+    const uiLayer = new Entity(this.game);
+    this._uiLayer = uiLayer;
+    this.add(uiLayer);
+  }
+
   _initPath() {
     const path = new Path(this.game);
     this._path = path;
-    this.add(path);
+    this._mapLayer.add(path);
 
     path.addPoint(new Vector(1, 0));
     path.addPoint(new Vector(1, 1));
@@ -47,7 +65,7 @@ export default class Gameplay extends Entity {
   _initEnemyBase() {
     const base = new EnemyBase(this.game, this._path);
     this._enemyBase = base;
-    this.add(base);
+    this._mapLayer.add(base);
   }
 
   _initTiles() {
@@ -71,21 +89,59 @@ export default class Gameplay extends Entity {
     ];
     const count = tilePositions.length;
     const size = Config.TileSize;
+    const tiles = this._tiles;
 
     for (let i = 0; i < count; ++i) {
       const tilePos = tilePositions[i];
       const tile = new Tile(this.game);
+      tiles.push(tile);
       tile.position.set(tilePos.x * size, tilePos.y * size);
-      this.add(tile);
+      this._mapLayer.add(tile);
     }
+  }
+
+  _initSelector() {
+    const selector = new TowerSelector(this.game);
+    this._selector = selector;
+    this._uiLayer.add(selector);
   }
 
   _setupEvents() {
     this._enemyBase.events.on('spawnEnemy', this._onEnemySpawned, this);
+    const selectorEvents = this._selector.events;
+    selectorEvents.on('towerSelected', this._onTowerSelected, this);
+    selectorEvents.on('close', this._onSelectorClose, this);
+
+    const tiles = this._tiles;
+    const count = tiles.length;
+
+    for (let i = 0; i < count; ++i) {
+      tiles[i].events.on('down', this._onTileDown, this);
+    }
   }
 
   _onEnemySpawned(enemy) {
     this._enemies.push(enemy);
-    this.add(enemy);
+    this._mapLayer.add(enemy);
+  }
+
+  _onTowerSelected(towerType) {
+    console.log(towerType);
+    this._selector.hide();
+  }
+
+  _onSelectorClose() {
+    this._selector.hide();
+  }
+
+  _onTileDown(tile) {
+    const selector = this._selector;
+
+    if (selector.visible === true) {
+      return;
+    }
+
+    selector.show();
+    selector.position.copyFrom(tile.getCenter());
   }
 }

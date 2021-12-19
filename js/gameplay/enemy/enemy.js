@@ -22,8 +22,6 @@ export default class Enemy extends Entity {
     }
 
     const position = this.position;
-    const centerOffset = Config.EnemySize * 0.5;
-    position.addXY(centerOffset, centerOffset);
 
     const nextPosition = nextPoint.getCenter();
     const direction = nextPosition
@@ -39,8 +37,6 @@ export default class Enemy extends Entity {
     } else {
       position.addXY(direction.x * movement, direction.y * movement);
     }
-
-    position.addXY(-centerOffset, -centerOffset);
   }
 
   _init() {
@@ -53,6 +49,7 @@ export default class Enemy extends Entity {
     const view = this.game.create.rectangle(size, size, 'red');
     this._view = view;
     this.add(view);
+    view.alignAnchor();
   }
 
   _setupNextPoint() {
